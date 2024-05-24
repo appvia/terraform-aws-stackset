@@ -15,6 +15,18 @@ variable "max_concurrent_count" {
   default     = 10
 }
 
+variable "failure_tolerance_count" {
+  description = "The number of failures that are tolerated before the stack operation is stopped"
+  type        = number
+  default     = 0
+}
+
+variable "retain_stacks_on_account_removal" {
+  description = "Whether to retain stacks on account removal"
+  type        = bool
+  default     = true
+}
+
 variable "name" {
   description = "The name of the cloudformation stack"
   type        = string

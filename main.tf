@@ -11,13 +11,13 @@ resource "aws_cloudformation_stack_set" "stackset" {
   tags             = var.tags
 
   operation_preferences {
-    failure_tolerance_count = 0
+    failure_tolerance_count = var.failure_tolerance_count
     max_concurrent_count    = var.max_concurrent_count
   }
 
   auto_deployment {
     enabled                          = true
-    retain_stacks_on_account_removal = true
+    retain_stacks_on_account_removal = var.retain_stacks_on_account_removal
   }
 
   lifecycle {
