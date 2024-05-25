@@ -31,7 +31,7 @@ resource "aws_cloudformation_stack_set" "stackset" {
 resource "aws_cloudformation_stack_set_instance" "ou" {
   for_each = toset(var.organizational_units)
 
-  region         = var.region
+  region         = local.region
   stack_set_name = aws_cloudformation_stack_set.stackset.name
 
   deployment_targets {
