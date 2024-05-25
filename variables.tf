@@ -41,6 +41,7 @@ variable "parameters" {
 variable "region" {
   description = "The region to deploy the cloudformation template"
   type        = string
+  default     = null
 }
 
 variable "organizational_units" {
