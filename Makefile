@@ -1,6 +1,4 @@
 #
-# Copyright (C) 2024  Appvia Ltd <info@appvia.io>
-#  
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -14,8 +12,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-AUTHOR_EMAIL=info@appvia.io
-
 .PHONY: all security lint format documentation documentation-examples validate-all validate validate-examples init examples
 
 default: all
@@ -60,7 +56,7 @@ init:
 
 security: 
 	@echo "--> Running Security checks"
-	@tfsec .
+	@trivy config .
 	$(MAKE) security-modules
 	$(MAKE) security-examples
 
@@ -69,7 +65,7 @@ security-modules:
 	@if [ -d modules ]; then \
 		find modules -type d -mindepth 1 -maxdepth 1 | while read -r dir; do \
 			echo "--> Validating $$dir"; \
-			tfsec $$dir; \
+			trivy config $$dir; \
 		done; \
 	fi
 
@@ -78,7 +74,7 @@ security-examples:
 	@if [ -d examples ]; then \
 		find examples -type d -mindepth 1 -maxdepth 1 | while read -r dir; do \
 			echo "--> Validating $$dir"; \
-			tfsec $$dir; \
+			trivy config $$dir; \
 		done; \
 	fi
 
