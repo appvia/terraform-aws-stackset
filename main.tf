@@ -38,4 +38,3 @@ resource "aws_cloudformation_stack_set_instance" "ou" {
     organizational_unit_ids = [each.value]
   }
 }
-
