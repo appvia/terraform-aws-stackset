@@ -1,5 +1,4 @@
 
-
 # tfsec:ignore:aws-iam-no-policy-wildcards
 resource "aws_cloudformation_stack_set" "stackset" {
   name             = var.name
@@ -36,5 +35,17 @@ resource "aws_cloudformation_stack_set_instance" "ou" {
 
   deployment_targets {
     organizational_unit_ids = [each.value]
+  }
+}
+
+## Deploy the stackset to the following account ids 
+resource "aws_cloudformation_stack_set_instance" "account" {
+  count = length(var.account_ids) ? 1 : 0
+
+  region         = local.region
+  stack_set_name = aws_cloudformation_stack_set.stackset.name
+
+  deployment_targets {
+    accounts = var.account_ids
   }
 }

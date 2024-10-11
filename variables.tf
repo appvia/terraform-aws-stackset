@@ -50,6 +50,12 @@ variable "organizational_units" {
   default     = []
 }
 
+variable "account_ids" {
+  description = "The account ids to deploy the stackset to"
+  type        = list(string)
+  default     = []
+}
+
 variable "tags" {
   description = "The tags to apply to the cloudformation stack"
   type        = map(string)
