@@ -12,13 +12,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-.PHONY: all security lint format documentation documentation-examples validate-all validate validate-examples init examples
+.PHONY: all security lint format documentation documentation-examples validate-all validate validate-examples init examples tests
 
 default: all
 
 all: 
 	$(MAKE) init
 	$(MAKE) validate
+	$(MAKE) tests
 	$(MAKE) lint
 	$(MAKE) security
 	$(MAKE) format
@@ -26,6 +27,7 @@ all:
 
 examples:
 	$(MAKE) validate-examples
+	$(MAKE) tests
 	$(MAKE) lint-examples
 	$(MAKE) lint
 	$(MAKE) security
@@ -50,6 +52,19 @@ documentation-examples:
 		find examples -type d -mindepth 1 -maxdepth 1 -exec terraform-docs markdown table --output-file README.md --output-mode inject {} \; ; \
 	fi
 
+upgrade-terraform-providers:
+	@printf "%s Upgrading Terraform providers for %-24s" "-->" "."
+	@terraform init -upgrade >/dev/null && echo "[OK]" || echo "[FAILED]"
+	@$(MAKE) upgrade-terraform-example-providers
+
+upgrade-terraform-example-providers:
+	@if [ -d examples ]; then \
+		find examples -type d -mindepth 1 -maxdepth 1 | while read -r dir; do \
+			printf "%s Upgrading Terraform providers for %-24s" "-->" "$$dir"; \
+			terraform -chdir=$$dir init -upgrade >/dev/null && echo "[OK]" || echo "[FAILED]"; \
+		done; \
+	fi
+
 init: 
 	@echo "--> Running terraform init"
 	@terraform init -backend=false
@@ -65,7 +80,7 @@ security-modules:
 	@if [ -d modules ]; then \
 		find modules -type d -mindepth 1 -maxdepth 1 | while read -r dir; do \
 			echo "--> Validating $$dir"; \
-			trivy config $$dir; \
+			trivy config  --format table --exit-code  1 --severity  CRITICAL,HIGH --ignorefile .trivyignore $$dir; \
 		done; \
 	fi
 
@@ -74,9 +89,13 @@ security-examples:
 	@if [ -d examples ]; then \
 		find examples -type d -mindepth 1 -maxdepth 1 | while read -r dir; do \
 			echo "--> Validating $$dir"; \
-			trivy config $$dir; \
+			trivy config  --format table --exit-code  1 --severity  CRITICAL,HIGH --ignorefile .trivyignore $$dir; \
 		done; \
 	fi
+
+tests: 
+	@echo "--> Running Terraform Tests" 
+	@terraform test
 
 validate:
 	@echo "--> Running terraform validate"
@@ -84,6 +103,7 @@ validate:
 	@terraform validate
 	$(MAKE) validate-modules
 	$(MAKE) validate-examples
+	$(MAKE) validate-commits
 
 validate-modules:
 	@echo "--> Running terraform validate on modules"
@@ -104,6 +124,11 @@ validate-examples:
 			terraform -chdir=$$dir validate; \
 		done; \
 	fi
+
+validate-commits:
+	@echo "--> Running commitlint against the main branch"
+	@command -v commitlint >/dev/null 2>&1 || { echo "commitlint is not installed. Please install it by running 'npm install -g commitlint'"; exit 1; }
+	@git log --pretty=format:"%s" origin/main..HEAD | commitlint --from=origin/main
 
 lint:
 	@echo "--> Running tflint"
