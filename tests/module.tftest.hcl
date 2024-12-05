@@ -47,7 +47,7 @@ run "multiple_regions" {
     parameters = {}
   }
 
-  ## The organization units to deploy to have a stackset call hello 
+  ## The organization units to deploy to have a stackset call hello
   assert {
     condition     = aws_cloudformation_stack_set.stackset.name == "lz-terraform-state"
     error_message = "We should be deploying to the stackset named lz-terraform-state"
