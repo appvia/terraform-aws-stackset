@@ -4,6 +4,12 @@ variable "capabilities" {
   default     = ["CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND", "CAPABILITY_IAM"]
 }
 
+variable "enabled_regions" {
+  description = "The regions to deploy the cloudformation stack to (if empty, deploys to current region)"
+  type        = list(string)
+  default     = null
+}
+
 variable "description" {
   description = "The description of the cloudformation stack"
   type        = string
