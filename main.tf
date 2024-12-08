@@ -27,7 +27,7 @@ resource "aws_cloudformation_stack_set" "stackset" {
   }
 }
 
-## Deploy the stackset to the following organizational units 
+## Deploy the stackset to the following organizational units
 resource "aws_cloudformation_stack_set_instance" "ou" {
   for_each = local.deployments
 
@@ -35,6 +35,8 @@ resource "aws_cloudformation_stack_set_instance" "ou" {
   stack_set_name = aws_cloudformation_stack_set.stackset.name
 
   deployment_targets {
+    accounts                = var.exclude_accounts
+    account_filter_type     = var.exclude_accounts != null ? "DIFFERENCE" : null
     organizational_unit_ids = [each.value.organization_unit]
   }
 }

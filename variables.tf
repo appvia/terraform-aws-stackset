@@ -10,6 +10,12 @@ variable "enabled_regions" {
   default     = null
 }
 
+variable "exclude_accounts" {
+  description = "A list of account IDs to exclude from the deployment"
+  type        = list(string)
+  default     = []
+}
+
 variable "description" {
   description = "The description of the cloudformation stack"
   type        = string
