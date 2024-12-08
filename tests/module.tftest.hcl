@@ -23,6 +23,23 @@ run "basic" {
   }
 }
 
+run "exclude_accounts" {
+  command = plan
+
+  variables {
+    description = "Used to deploy the default permissions boundary for the pipelines."
+    name        = "lz-iamdefaultboundary"
+    region      = "us-west-2"
+    tags        = {}
+    template    = ""
+    parameters  = {}
+    exclude_accounts = [
+      "123456789012",
+      "123456789013"
+    ]
+  }
+}
+
 run "multiple_regions" {
   command = plan
 

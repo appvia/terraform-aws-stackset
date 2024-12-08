@@ -13,7 +13,7 @@ variable "enabled_regions" {
 variable "exclude_accounts" {
   description = "A list of account IDs to exclude from the deployment"
   type        = list(string)
-  default     = []
+  default     = null
 }
 
 variable "description" {
