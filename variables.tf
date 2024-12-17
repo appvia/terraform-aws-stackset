@@ -4,6 +4,18 @@ variable "capabilities" {
   default     = ["CAPABILITY_NAMED_IAM", "CAPABILITY_AUTO_EXPAND", "CAPABILITY_IAM"]
 }
 
+variable "call_as" {
+  description = "Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account"
+  type        = string
+  default     = "SELF"
+}
+
+variable "permission_model" {
+  description = "Describes how the IAM roles required for your StackSet are created"
+  type        = string
+  default     = "SELF_MANAGED"
+}
+
 variable "enabled_regions" {
   description = "The regions to deploy the cloudformation stack to (if empty, deploys to current region)"
   type        = list(string)

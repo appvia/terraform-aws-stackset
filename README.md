@@ -14,6 +14,7 @@
 | <a name="input_name"></a> [name](#input\_name) | The name of the cloudformation stack | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to apply to the cloudformation stack | `map(string)` | n/a | yes |
 | <a name="input_template"></a> [template](#input\_template) | The body of the cloudformation template to deploy | `string` | n/a | yes |
+| <a name="input_call_as"></a> [call\_as](#input\_call\_as) | Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account | `string` | `"SELF"` | no |
 | <a name="input_capabilities"></a> [capabilities](#input\_capabilities) | The capabilities required to deploy the cloudformation template | `list(string)` | <pre>[<br/>  "CAPABILITY_NAMED_IAM",<br/>  "CAPABILITY_AUTO_EXPAND",<br/>  "CAPABILITY_IAM"<br/>]</pre> | no |
 | <a name="input_enabled_regions"></a> [enabled\_regions](#input\_enabled\_regions) | The regions to deploy the cloudformation stack to (if empty, deploys to current region) | `list(string)` | `null` | no |
 | <a name="input_exclude_accounts"></a> [exclude\_accounts](#input\_exclude\_accounts) | A list of account IDs to exclude from the deployment | `list(string)` | `null` | no |
@@ -21,6 +22,7 @@
 | <a name="input_max_concurrent_count"></a> [max\_concurrent\_count](#input\_max\_concurrent\_count) | The maximum number of concurrent deployments | `number` | `10` | no |
 | <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | The organizational units to deploy the stackset to | `list(string)` | `[]` | no |
 | <a name="input_parameters"></a> [parameters](#input\_parameters) | The parameters to pass to the cloudformation template | `map(string)` | `{}` | no |
+| <a name="input_permission_model"></a> [permission\_model](#input\_permission\_model) | Describes how the IAM roles required for your StackSet are created | `string` | `"SELF_MANAGED"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region to deploy the cloudformation template | `string` | `null` | no |
 | <a name="input_retain_stacks_on_account_removal"></a> [retain\_stacks\_on\_account\_removal](#input\_retain\_stacks\_on\_account\_removal) | Whether to retain stacks on account removal | `bool` | `true` | no |
 

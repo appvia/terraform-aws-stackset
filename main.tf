@@ -2,13 +2,14 @@
 
 # tfsec:ignore:aws-iam-no-policy-wildcards
 resource "aws_cloudformation_stack_set" "stackset" {
-  name             = var.name
+  call_as          = var.call_as
   capabilities     = var.capabilities
   description      = var.description
+  name             = var.name
   parameters       = var.parameters
-  permission_model = "SERVICE_MANAGED"
-  template_body    = var.template
+  permission_model = var.permission_model
   tags             = var.tags
+  template_body    = var.template
 
   operation_preferences {
     failure_tolerance_count = var.failure_tolerance_count
