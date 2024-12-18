@@ -40,4 +40,8 @@ resource "aws_cloudformation_stack_set_instance" "ou" {
     account_filter_type     = var.exclude_accounts != null ? "DIFFERENCE" : null
     organizational_unit_ids = [each.value.organization_unit]
   }
+
+  depends_on = [
+    aws_cloudformation_stack_set.stackset,
+  ]
 }
