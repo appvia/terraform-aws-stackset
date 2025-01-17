@@ -14,6 +14,11 @@ variable "permission_model" {
   description = "Describes how the IAM roles required for your StackSet are created"
   type        = string
   default     = "SERVICE_MANAGED"
+
+  validation {
+    condition     = contains(["SELF_MANAGED", "SERVICE_MANAGED"], var.permission_model)
+    error_message = "permission_model must be either SELF or SERVICE_MANAGED"
+  }
 }
 
 variable "enabled_regions" {

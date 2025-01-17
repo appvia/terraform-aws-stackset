@@ -1,5 +1,4 @@
 
-
 # tfsec:ignore:aws-iam-no-policy-wildcards
 resource "aws_cloudformation_stack_set" "stackset" {
   call_as          = var.call_as
@@ -16,9 +15,13 @@ resource "aws_cloudformation_stack_set" "stackset" {
     max_concurrent_count    = var.max_concurrent_count
   }
 
-  auto_deployment {
-    enabled                          = true
-    retain_stacks_on_account_removal = var.retain_stacks_on_account_removal
+  dynamic "auto_deployment" {
+    for_each = var.permission_model == "SERVICE_MANAGED" ? [1] : []
+
+    content {
+      enabled                          = true
+      retain_stacks_on_account_removal = var.retain_stacks_on_account_removal
+    }
   }
 
   lifecycle {
