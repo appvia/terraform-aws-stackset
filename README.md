@@ -37,7 +37,7 @@ This module provides a simple way to deploy a CloudFormation stack to multiple a
 | <a name="input_max_concurrent_count"></a> [max\_concurrent\_count](#input\_max\_concurrent\_count) | The maximum number of concurrent deployments | `number` | `10` | no |
 | <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | The organizational units to deploy the stackset to | `list(string)` | `[]` | no |
 | <a name="input_parameters"></a> [parameters](#input\_parameters) | The parameters to pass to the cloudformation template | `map(string)` | `{}` | no |
-| <a name="input_permission_model"></a> [permission\_model](#input\_permission\_model) | Describes how the IAM roles required for your StackSet are created | `string` | `"SELF_MANAGED"` | no |
+| <a name="input_permission_model"></a> [permission\_model](#input\_permission\_model) | Describes how the IAM roles required for your StackSet are created | `string` | `"SERVICE_MANAGED"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region to deploy the cloudformation template | `string` | `null` | no |
 | <a name="input_retain_stacks_on_account_removal"></a> [retain\_stacks\_on\_account\_removal](#input\_retain\_stacks\_on\_account\_removal) | Whether to retain stacks on account removal | `bool` | `true` | no |
 
