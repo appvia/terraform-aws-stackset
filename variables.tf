@@ -13,7 +13,7 @@ variable "call_as" {
 variable "permission_model" {
   description = "Describes how the IAM roles required for your StackSet are created"
   type        = string
-  default     = "SELF_MANAGED"
+  default     = "SERVICE_MANAGED"
 }
 
 variable "enabled_regions" {
