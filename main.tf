@@ -40,8 +40,8 @@ resource "aws_cloudformation_stack_set_instance" "ou" {
   stack_set_name = aws_cloudformation_stack_set.stackset.name
 
   deployment_targets {
-    accounts                = var.exclude_accounts
-    account_filter_type     = var.exclude_accounts != null ? "DIFFERENCE" : null
+    accounts                = var.accounts
+    account_filter_type     = var.accounts != null && var.enable_exclude ? "DIFFERENCE" : null
     organizational_unit_ids = [each.value.organization_unit]
   }
 

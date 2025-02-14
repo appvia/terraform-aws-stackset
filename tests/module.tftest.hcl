@@ -33,10 +33,11 @@ run "exclude_accounts" {
     tags        = {}
     template    = ""
     parameters  = {}
-    exclude_accounts = [
+    accounts = [
       "123456789012",
       "123456789013"
     ]
+    enable_exclude = true
   }
 }
 
