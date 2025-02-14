@@ -52,14 +52,14 @@ resource "aws_cloudformation_stack_set_instance" "ou" {
 
 ## Deploy the stackset to the following accounts
 resource "aws_cloudformation_stack_set_instance" "accounts" {
-  for_each = var.accounts != null ? toset(var.accounts) : toset([])
+  for_each = local.account_deployments
 
   call_as        = var.call_as
-  region         = each.value.region
+  region         = each.key
   stack_set_name = aws_cloudformation_stack_set.stackset.name
 
   deployment_targets {
-    accounts = var.accounts
+    accounts = each.value
   }
 
   depends_on = [
