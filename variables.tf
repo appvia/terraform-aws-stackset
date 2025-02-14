@@ -28,15 +28,15 @@ variable "enabled_regions" {
 }
 
 variable "accounts" {
-  description = "A list of account IDs used as a target"
+  description = "When using an account deployments, the following accounts will be included"
   type        = list(string)
   default     = null
 }
 
-variable "enable_exclude" {
-  description = "Indicates the accounts list will be used as an exclusion list"
-  type        = bool
-  default     = false
+variable "exclude_accounts" {
+  description = "When using an organizational deployments, the following accounts will be excluded"
+  type        = list(string)
+  default     = null
 }
 
 variable "description" {

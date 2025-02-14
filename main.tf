@@ -33,16 +33,33 @@ resource "aws_cloudformation_stack_set" "stackset" {
 
 ## Deploy the stackset to the following organizational units
 resource "aws_cloudformation_stack_set_instance" "ou" {
-  for_each = local.deployments
+  for_each = local.organizational_deployments
 
   call_as        = var.call_as
   region         = each.value.region
   stack_set_name = aws_cloudformation_stack_set.stackset.name
 
   deployment_targets {
-    accounts                = var.accounts
-    account_filter_type     = var.accounts != null && var.enable_exclude ? "DIFFERENCE" : null
+    accounts                = var.exclude_accounts
+    account_filter_type     = var.exclude_accounts != null ? "DIFFERENCE" : null
     organizational_unit_ids = [each.value.organization_unit]
+  }
+
+  depends_on = [
+    aws_cloudformation_stack_set.stackset,
+  ]
+}
+
+## Deploy the stackset to the following accounts
+resource "aws_cloudformation_stack_set_instance" "accounts" {
+  for_each = var.accounts != null ? toset(var.accounts) : toset([])
+
+  call_as        = var.call_as
+  region         = each.value.region
+  stack_set_name = aws_cloudformation_stack_set.stackset.name
+
+  deployment_targets {
+    accounts = var.accounts
   }
 
   depends_on = [

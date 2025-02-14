@@ -16,6 +16,6 @@ locals {
     ]
   ])
 
-  deployments = { for x in local.organization_unit_deployments : x.key => x }
+  organizational_deployments = { for x in local.organization_unit_deployments : x.key => x }
 }
 
