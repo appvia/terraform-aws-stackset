@@ -30,7 +30,7 @@ variable "enabled_regions" {
 variable "accounts" {
   description = "When using an account deployments, the following accounts will be included"
   type        = list(string)
-  default     = null
+  default     = []
 }
 
 variable "exclude_accounts" {

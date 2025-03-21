@@ -29,7 +29,7 @@ This module provides a simple way to deploy a CloudFormation stack to multiple a
 | <a name="input_name"></a> [name](#input\_name) | The name of the cloudformation stack | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to apply to the cloudformation stack | `map(string)` | n/a | yes |
 | <a name="input_template"></a> [template](#input\_template) | The body of the cloudformation template to deploy | `string` | n/a | yes |
-| <a name="input_accounts"></a> [accounts](#input\_accounts) | When using an account deployments, the following accounts will be included | `list(string)` | `null` | no |
+| <a name="input_accounts"></a> [accounts](#input\_accounts) | When using an account deployments, the following accounts will be included | `list(string)` | `[]` | no |
 | <a name="input_call_as"></a> [call\_as](#input\_call\_as) | Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account | `string` | `"SELF"` | no |
 | <a name="input_capabilities"></a> [capabilities](#input\_capabilities) | The capabilities required to deploy the cloudformation template | `list(string)` | <pre>[<br/>  "CAPABILITY_NAMED_IAM",<br/>  "CAPABILITY_AUTO_EXPAND",<br/>  "CAPABILITY_IAM"<br/>]</pre> | no |
 | <a name="input_enabled_regions"></a> [enabled\_regions](#input\_enabled\_regions) | The regions to deploy the cloudformation stack to (if empty, deploys to current region) | `list(string)` | `null` | no |

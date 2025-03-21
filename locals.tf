@@ -17,9 +17,9 @@ locals {
   ])
 
   ## All the account deployments to be created
-  account_deployments = {
+  account_deployments = length(var.accounts) > 0 ? {
     for region in local.enabled_regions : region => var.accounts
-  }
+  } : {}
 
   ## All the organizational deployment by key
   organizational_deployments = { for x in local.organization_unit_deployments : x.key => x }
