@@ -1,7 +1,7 @@
 
 locals {
   ## The current region we are provisioning resources in
-  region = coalesce(var.region, data.aws_region.current.name)
+  region = coalesce(var.region, data.aws_region.current.region)
   ## Enabled regions to deploy the stackset to
   enabled_regions = var.enabled_regions == null ? [local.region] : sort(var.enabled_regions)
 
