@@ -35,9 +35,15 @@ resource "aws_cloudformation_stack_set" "stackset" {
 resource "aws_cloudformation_stack_set_instance" "ou" {
   for_each = local.organizational_deployments
 
-  call_as        = var.call_as
-  region         = each.value.region
-  stack_set_name = aws_cloudformation_stack_set.stackset.name
+  call_as                   = var.call_as
+  stack_set_name            = aws_cloudformation_stack_set.stackset.name
+  stack_set_instance_region = each.value.region
+
+  operation_preferences {
+    failure_tolerance_count = var.failure_tolerance_count
+    max_concurrent_count    = var.max_concurrent_count
+    region_concurrency_type = "PARALLEL"
+  }
 
   deployment_targets {
     accounts                = var.exclude_accounts
@@ -54,9 +60,15 @@ resource "aws_cloudformation_stack_set_instance" "ou" {
 resource "aws_cloudformation_stack_set_instance" "accounts" {
   for_each = local.account_deployments
 
-  call_as        = var.call_as
-  region         = each.key
-  stack_set_name = aws_cloudformation_stack_set.stackset.name
+  call_as                   = var.call_as
+  stack_set_name            = aws_cloudformation_stack_set.stackset.name
+  stack_set_instance_region = each.key
+
+  operation_preferences {
+    failure_tolerance_count = var.failure_tolerance_count
+    max_concurrent_count    = var.max_concurrent_count
+    region_concurrency_type = "PARALLEL"
+  }
 
   deployment_targets {
     accounts = each.value
