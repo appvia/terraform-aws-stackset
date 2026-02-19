@@ -36,7 +36,7 @@ variable "accounts" {
 variable "exclude_accounts" {
   description = "When using an organizational deployments, the following accounts will be excluded"
   type        = list(string)
-  default     = null
+  default     = []
 }
 
 variable "description" {

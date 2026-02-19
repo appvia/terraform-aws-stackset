@@ -4,6 +4,8 @@ locals {
   region = coalesce(var.region, data.aws_region.current.region)
   ## Enabled regions to deploy the stackset to
   enabled_regions = var.enabled_regions == null ? [local.region] : sort(var.enabled_regions)
+  ## List of exclude accounts for organizational deployments
+  exclude_accounts = length(try(var.exclude_accounts, [])) > 0 ? var.exclude_accounts : []
 
   ## Deployments to be created
   organization_unit_deployments = flatten([
