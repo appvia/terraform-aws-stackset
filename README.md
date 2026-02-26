@@ -20,7 +20,7 @@ The primary use case is enabling centralized infrastructure provisioning in AWS 
 
 The module orchestrates three key AWS StackSet capabilities:
 
-- **StackSet Definition**: Creates a CloudFormation StackSet with your template, parameters, and operational preferences
+- **StackSet Definition**: Creates a CloudFormation StackSet with your inline template or template URL, parameters, and operational preferences
 - **Organizational Unit Deployment**: Automatically deploys stack instances to all accounts within specified OUs, with optional account exclusions
 - **Account-Based Deployment**: Explicitly targets specific account IDs across one or more regions
 
@@ -48,6 +48,7 @@ The module is commonly used in AWS Landing Zone architectures, AWS Control Tower
 - **Hybrid Targeting**: Supports both OU-based deployment (for organizational governance) and explicit account-based targeting (for exceptions or testing)
 - **Account Exclusions**: Fine-grained control to exclude specific accounts from OU-level deployments without modifying organizational structure
 - **Template Parameterization**: Pass CloudFormation parameters dynamically, enabling per-environment customization of the same template
+- **Template Source Flexibility**: Provide templates inline (`template`) or via URL (`template_url`) for larger CloudFormation documents
 
 ### Operational Excellence
 
@@ -107,6 +108,27 @@ This configuration will:
 - Automatically provision to new accounts as they join these OUs
 - Roll out to both us-east-1 and eu-west-1 regions in parallel
 - Tolerate up to 2 failures before halting the operation
+
+### Using `template_url` for Large Templates
+
+For templates that exceed CloudFormation inline body limits, use `template_url` instead of `template`:
+
+```hcl
+module "security_baseline_large_template" {
+  source = "appvia/stackset/aws"
+
+  name         = "security-baseline-large-template"
+  description  = "Deploy security controls using a template stored in S3"
+  template_url = "https://s3.amazonaws.com/example-bucket/security-baseline.yml"
+
+  organizational_units = ["ou-xxxx-production"]
+  enabled_regions      = ["us-east-1"]
+  parameters           = {}
+  tags                 = {}
+}
+```
+
+Exactly one of `template` or `template_url` must be set.
 
 ### The "Power User" (Advanced)
 
@@ -266,14 +288,13 @@ This migration example shows:
 - **OU Changes Not Tracked**: If accounts are moved between OUs outside of Terraform, the module does not automatically detect and update stack instances. You must manually update the `organizational_units` variable
 - **Regional Dependencies**: CloudFormation StackSets deploy identically to all specified regions. If your template requires region-specific parameters or resources, consider using separate StackSets per region
 - **Service-Managed Requirement**: The `SERVICE_MANAGED` permission model requires AWS Control Tower or Organizations to be enabled with trusted access. New AWS accounts may take several hours to fully support StackSet deployments
-- **Template Size Limit**: CloudFormation templates are limited to 51,200 bytes when passed inline. For larger templates, consider using S3-based template storage (requires template_url instead of template_body, not currently supported by this module)
+- **Template Size Limit**: CloudFormation templates are limited to 51,200 bytes when passed inline (`template`). Use `template_url` for larger templates hosted in S3 or other supported locations
 - **Stack Instance Limits**: AWS enforces a soft limit of 2,000 stack instances per StackSet. For organizations exceeding this, consider partitioning deployments across multiple StackSets
 
 ### Breaking Changes
 
 **v2.0.0 (Planned)**:
 - Minimum AWS provider version will increase to 6.0.0
-- Support for S3-based template URLs for templates exceeding inline size limits
 
 **v1.0.0**:
 - Initial stable release
@@ -294,12 +315,11 @@ This migration example shows:
 | <a name="input_description"></a> [description](#input\_description) | The description of the cloudformation stack | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | The name of the cloudformation stack | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | The tags to apply to the cloudformation stack | `map(string)` | n/a | yes |
-| <a name="input_template"></a> [template](#input\_template) | The body of the cloudformation template to deploy | `string` | n/a | yes |
 | <a name="input_accounts"></a> [accounts](#input\_accounts) | When using an account deployments, the following accounts will be included | `list(string)` | `[]` | no |
 | <a name="input_call_as"></a> [call\_as](#input\_call\_as) | Specifies whether you are acting as an account administrator in the organization's management account or as a delegated administrator in a member account | `string` | `"SELF"` | no |
 | <a name="input_capabilities"></a> [capabilities](#input\_capabilities) | The capabilities required to deploy the cloudformation template | `list(string)` | <pre>[<br/>  "CAPABILITY_NAMED_IAM",<br/>  "CAPABILITY_AUTO_EXPAND",<br/>  "CAPABILITY_IAM"<br/>]</pre> | no |
 | <a name="input_enabled_regions"></a> [enabled\_regions](#input\_enabled\_regions) | The regions to deploy the cloudformation stack to (if empty, deploys to current region) | `list(string)` | `null` | no |
-| <a name="input_exclude_accounts"></a> [exclude\_accounts](#input\_exclude\_accounts) | When using an organizational deployments, the following accounts will be excluded | `list(string)` | `null` | no |
+| <a name="input_exclude_accounts"></a> [exclude\_accounts](#input\_exclude\_accounts) | When using an organizational deployments, the following accounts will be excluded | `list(string)` | `[]` | no |
 | <a name="input_failure_tolerance_count"></a> [failure\_tolerance\_count](#input\_failure\_tolerance\_count) | The number of failures that are tolerated before the stack operation is stopped | `number` | `0` | no |
 | <a name="input_max_concurrent_count"></a> [max\_concurrent\_count](#input\_max\_concurrent\_count) | The maximum number of concurrent deployments | `number` | `10` | no |
 | <a name="input_organizational_units"></a> [organizational\_units](#input\_organizational\_units) | The organizational units to deploy the stackset to | `list(string)` | `[]` | no |
@@ -307,6 +327,8 @@ This migration example shows:
 | <a name="input_permission_model"></a> [permission\_model](#input\_permission\_model) | Describes how the IAM roles required for your StackSet are created | `string` | `"SERVICE_MANAGED"` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region to deploy the cloudformation template | `string` | `null` | no |
 | <a name="input_retain_stacks_on_account_removal"></a> [retain\_stacks\_on\_account\_removal](#input\_retain\_stacks\_on\_account\_removal) | Whether to retain stacks on account removal | `bool` | `true` | no |
+| <a name="input_template"></a> [template](#input\_template) | The body of the cloudformation template to deploy | `string` | `null` | no |
+| <a name="input_template_url"></a> [template\_url](#input\_template\_url) | The URL of the cloudformation template to deploy | `string` | `null` | no |
 
 ## Outputs
 

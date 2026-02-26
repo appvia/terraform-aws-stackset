@@ -9,6 +9,7 @@ resource "aws_cloudformation_stack_set" "stackset" {
   permission_model = var.permission_model
   tags             = var.tags
   template_body    = var.template
+  template_url     = var.template_url
 
   operation_preferences {
     failure_tolerance_count = var.failure_tolerance_count
@@ -25,6 +26,11 @@ resource "aws_cloudformation_stack_set" "stackset" {
   }
 
   lifecycle {
+    precondition {
+      condition     = (var.template == null) != (var.template_url == null)
+      error_message = "Exactly one of template or template_url must be provided."
+    }
+
     ignore_changes = [
       administration_role_arn,
     ]
