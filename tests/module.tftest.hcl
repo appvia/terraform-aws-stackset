@@ -157,9 +157,9 @@ run "organizational_deployment_exclude_accounts" {
   command = plan
 
   variables {
-    description = "Test exclude_accounts in organizational deployment."
-    name        = "lz-exclude-accounts-test"
-    region      = "eu-west-1"
+    description     = "Test exclude_accounts in organizational deployment."
+    name            = "lz-exclude-accounts-test"
+    region          = "eu-west-1"
     enabled_regions = ["eu-west-1"]
     tags = {
       Environment = "test"
@@ -303,6 +303,58 @@ run "account_deployment_multiple_regions" {
   assert {
     condition     = alltrue([for key in keys(var.tags) : aws_cloudformation_stack_set.stackset.tags[key] == var.tags[key]])
     error_message = "The stackset tags should match the provided variables"
+  }
+}
+
+run "template_url" {
+  command = plan
+
+  variables {
+    description  = "Test template_url based deployments."
+    name         = "lz-template-url"
+    region       = "eu-west-1"
+    tags         = {}
+    template_url = "https://example.com/template.yaml"
+    parameters   = {}
+  }
+
+  assert {
+    condition     = aws_cloudformation_stack_set.stackset.template_url == "https://example.com/template.yaml"
+    error_message = "The stackset should use template_url when provided."
+  }
+}
+
+run "missing_template_source" {
+  command = plan
+
+  expect_failures = [
+    aws_cloudformation_stack_set.stackset,
+  ]
+
+  variables {
+    description = "Missing both template and template_url should fail."
+    name        = "lz-missing-template"
+    region      = "eu-west-1"
+    tags        = {}
+    parameters  = {}
+  }
+}
+
+run "both_template_sources" {
+  command = plan
+
+  expect_failures = [
+    aws_cloudformation_stack_set.stackset,
+  ]
+
+  variables {
+    description  = "Setting both template and template_url should fail."
+    name         = "lz-both-template-sources"
+    region       = "eu-west-1"
+    tags         = {}
+    template     = ""
+    template_url = "https://example.com/template.yaml"
+    parameters   = {}
   }
 }
 

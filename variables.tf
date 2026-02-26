@@ -93,5 +93,12 @@ variable "tags" {
 variable "template" {
   description = "The body of the cloudformation template to deploy"
   type        = string
+  default     = null
+}
+
+variable "template_url" {
+  description = "The URL of the cloudformation template to deploy"
+  type        = string
+  default     = null
 }
 
