@@ -52,8 +52,8 @@ resource "aws_cloudformation_stack_set_instance" "ou" {
   }
 
   deployment_targets {
-    accounts                = length(local.exclude_accounts) > 0 ? var.exclude_accounts : null
-    account_filter_type     = length(local.exclude_accounts) > 0 ? "DIFFERENCE" : null
+    accounts                = length(try(local.exclude_accounts, [])) > 0 ? var.exclude_accounts : null
+    account_filter_type     = length(try(local.exclude_accounts, [])) > 0 ? "DIFFERENCE" : null
     organizational_unit_ids = [each.value.organization_unit]
   }
 
